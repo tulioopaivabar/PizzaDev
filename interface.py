@@ -2,66 +2,21 @@ import flet as ft
 
 def main(page: ft.Page): 
     page.title = "PizzaDev" 
-    page.bgcolor = "#E74C3C"
+    page.bgcolor = "#FCFDE4"
 
-    titulo = ft.Text("PizzaDev", size=32, weight=ft.FontWeight.BOLD) 
-    subtitulo = ft.Text("SABOR INCONFUNDÍVEL E TRADIÇÃO DESDE 1966")
+    titulo = ft.Container(
+        width= 10000,
+        height= 100,   
+        padding=15,   
+        bgcolor = "#BD0000",
+        content = ft.Text("PizzaDev", color = "#FFFFFF", size=50, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER) )
+
+    subtitulo = ft.Text("SABOR INCONFUNDÍVEL E TRADIÇÃO DESDE 1966", weight=ft.FontWeight.BOLD,)
     mensagemfunc = ft.Text("Funcionário, mantenha sempre o sorriso ao atender")  
     nome_aluno = ft.Text("Túlio Paiva Barreto")
-    obs = ft.Text("AGUARDANDO. . .", size = 12, color = "#FF0000")
-
-    card1 = ft.Container(
-        padding=15,
-        border_radius=30,
-        bgcolor=ft.Colors.WHITE,
-        content=ft.Column([
-            ft.Text("CALABRESA", size=20, weight=ft.FontWeight.BOLD),
-            ft.Text("Calabresa, cebola e muçarela"),
-            ft.Row([ft.Text("M: R$ 32"), ft.Text("G: R$ 42")])
-        ])
-    )
-
-    card2 = ft.Container(
-        padding=15,
-        border_radius=30,
-        bgcolor=ft.Colors.WHITE,
-        content=ft.Column([
-            ft.Text("MUSSARELA", size=20, weight=ft.FontWeight.BOLD),
-            ft.Text("Mussarela, molho de tomate, orégano"),
-            ft.Row([ft.Text("M: R$ 32"), ft.Text("G: R$ 42")])
-        ])
-    )
-
-    card3 = ft.Container(
-        padding=15,
-        border_radius=30,
-        bgcolor=ft.Colors.WHITE,
-        content=ft.Column([
-            ft.Text("FRANGO", size=20, weight=ft.FontWeight.BOLD),
-            ft.Text("Frango, azeitona, mussarela, molho de tomate, orégano"),
-            ft.Row([ft.Text("M: R$ 32"), ft.Text("G: R$ 42")])
-        ])
-    )
-
-    card4 = ft.Container(
-        padding=15,
-        border_radius=30,
-        bgcolor=ft.Colors.WHITE,
-        content=ft.Column([
-            ft.Text("PORTUGUESA", size=20, weight=ft.FontWeight.BOLD),
-            ft.Text("Ovo cozido, presunto, cebola mussarela, molho de tomate, orégano"),
-            ft.Row([ft.Text("M: R$ 32"), ft.Text("G: R$ 42")])
-        ])
-    )
-
-    cardapio = ft.Row(
-        controls = [card1, card2, card3, card4],
-        wrap = True,
-        spacing = 20,
-        run_spacing = 20)
 
     mensagem = ft.Text("Selecione o sabor: ")
-
+    
     def escolher_calabresa(e):
         mensagem.value = "Selecionada: Calabresa"
         page.update()
@@ -78,6 +33,7 @@ def main(page: ft.Page):
         mensagem.value = "Selecionada: Portuguesa"
         page.update()
 
+    
     escolha = ft.Row(
         controls = [ft.Button("ESCOLHER CALABRESA", on_click = escolher_calabresa),
             ft.Button("ESCOLHER MUSSARELA", on_click = escolher_mussarela),
@@ -85,6 +41,7 @@ def main(page: ft.Page):
             ft.Button("ESCOLHER PORTUGUESA", on_click = escolher_portuguesa,)])
 
     quantidade = ft.TextField(label = "Quantidade", value = "1")
+
     tamanho = ft.RadioGroup(
         content = ft.Row([ft.Radio(value = "M", label = "M"),
                            ft.Radio(value = "G", label = "G")
@@ -104,7 +61,32 @@ def main(page: ft.Page):
         resultado.value = f"Valor parcial: R$: {preco * qtd:.2f}"
         page.update
 
+    PIZZAS = [{"id":"P01", "nome":"CALABRESA", "m":32, "g":42},
+              {"id":"P02", "nome":"MUSSARELA", "m":32, "g":42},
+              {"id":"P03", "nome":"FRANGO", "m":32, "g":42},
+              {"id":"P04", "nome":"PORTUGUESA", "m":32, "g":42}]
 
+    def criar_card(pizza):
+        return ft.Container(
+            width= 600,
+            height= 300,
+            padding=15,
+            border_radius=30,
+            bgcolor=ft.Colors.WHITE,
+            content=ft.Column([
+                ft.Text(pizza["nome"], size=20),
+                ft.Text(f'M: R$ {pizza["m"]} | G: R$ {pizza["g"]}')
+        ])
+    )
+
+    cardapio = ft.Row(
+        controls = [criar_card(p) for p in PIZZAS],
+        wrap = True,
+        spacing = 20,
+        run_spacing = 20)
+
+    obs = ft.Text("AGUARDANDO. . .", size = 12, color = "#FF0000", )
+    
     page.add(titulo, subtitulo, mensagemfunc, nome_aluno, escolha, quantidade, mensagem, tamanho, resultado,
              ft.Button("CALCULAR", on_click = calcular), cardapio, obs) 
 
